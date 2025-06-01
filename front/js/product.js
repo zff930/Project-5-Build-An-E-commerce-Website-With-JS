@@ -37,12 +37,6 @@ function insertProduct(product) {
   });
 }
 
-// itemColors.addEventListener('change', () => {
-// });
-
-// itemQuant.addEventListener('input', () => {
-// });
-
 // Add an EventListener for the "Added to Cart" button
 // so that products will be added to the cart in localStorage
 addToCart.addEventListener("click", () => {
