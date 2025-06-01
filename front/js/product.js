@@ -1,7 +1,6 @@
 //Collect the ID of the product that was selected on the homepage.
 const params = new URLSearchParams(window.location.search); // Get the full query string from the URL
 const productId = params.get("id"); // Extract the value of "id"
-console.log(productId);
 
 //Insert the product and its details into the product page.
 fetch(`http://localhost:3000/api/products/${productId}`)
@@ -19,6 +18,7 @@ const itemPrice = document.getElementById("price");
 const itemDescription = document.getElementById("description");
 const itemColors = document.getElementById("colors");
 
+// Use dynamic info in the string for innerHTML via ${}
 /**
  * Insert the clicked product into its corresponding product page
  * 
