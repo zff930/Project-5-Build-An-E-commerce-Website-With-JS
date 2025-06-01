@@ -36,24 +36,31 @@ function insertProduct(product) {
   });
 }
 
-itemColors.addEventListener('change', ($event) => {
-  console.log('Selected color:', $event.target.value);
-});
+// itemColors.addEventListener('change', () => {
+// });
 
-itemQuant.addEventListener('input', ($event) => {
-  $event.preventDefault();
-  itemQuant.value = $event.target.value;
-  console.log(itemQuant.value);
-});
+// itemQuant.addEventListener('input', () => {
+// });
 
 addToCart.addEventListener('click', () => {
   const product = {
+    id: productId,
     imageUrl: document.querySelector('.item__img img').getAttribute('src'),
     title: itemTitle.textContent,
     price: itemPrice.textContent,
-    colors: itemColors.value,
-    quantity: itemQuant.value
+    color: itemColors.value,
+    quantity: parseInt(itemQuant.value)
   };
 
-  localStorage.setItem('product', JSON.stringify(product));
+  const cart = JSON.parse(localStorage.getItem('cart')) || [];
+  const index = cart.findIndex((item) => {return item.color === product.color});
+  if (index !== -1) {
+    cart[index].quantity += product.quantity;
+  } else {
+    cart.push(product);
+  }
+
+  localStorage.setItem('cart', JSON.stringify(cart));
+
+  alert('Product added to cart!');
 });
