@@ -27,6 +27,7 @@ const addToCart = document.getElementById("addToCart");
  * @param {object} product - an object that has product info
  */
 function insertProduct(product) {
+  // Insert product info into webpage using JS DOM manipulation
   itemImage.innerHTML = `<img src='${product.imageUrl}' alt='Photo of a sofa'>`;
   itemTitle.innerHTML = `${product.name}`;
   itemPrice.innerHTML = `${product.price}`;
