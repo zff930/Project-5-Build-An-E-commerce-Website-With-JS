@@ -11,10 +11,15 @@
 //   });
 
 // Get the existing element on the page where to insert cart items
-const cartItems = document.getElementById("cart__items");
+const cartItems = document.getElementById('cart__items');
+const totalPrice = document.getElementById('totalPrice');
+const itemQuant = document.getElementsByClassName('itemQuantity');
 
 const cart = JSON.parse(localStorage.getItem("cart"));
 console.log(cart);
+insertCartItems();
+insertTotalPrice();
+console.log(itemQuant);
 
 // Use dynamic info in the string for innerHTML via ${}
 /**
@@ -47,3 +52,26 @@ function insertCartItems() {
           </article>`;
   });
 }
+
+/** Calculate total price of all products in the cart
+ * 
+ * @returns a number that indicates price sum 
+ */
+function calcTotalPrice() {
+    let sumPrice = 0;
+    cart.forEach((cartItem) => {
+        sumPrice += cartItem.price * cartItem.quantity;
+    });
+    return sumPrice;
+}
+
+/**
+ * Insert total price into cart page for innerHTML via calcTotalPrice()
+ */
+function insertTotalPrice() {
+    totalPrice.innerHTML = calcTotalPrice();
+}
+
+itemQuant.addEventListener('change', ($event) => {
+    
+});
