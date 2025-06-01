@@ -23,7 +23,7 @@ function insertProducts(products) {
   // Iterate over the products that came from the backend API
   for (let product of products) {
     // Insert product info into webpage using JS DOM manipulation (innerHtml/createElement)
-    console.log(product);
+    // console.log(product);
     items.innerHTML += `
         <a href="./product.html?id=${product._id}">
           <article>
