@@ -45,15 +45,15 @@ function insertProduct(product) {
 addToCart.addEventListener('click', () => {
   const product = {
     id: productId,
-    imageUrl: document.querySelector('.item__img img').getAttribute('src'),
-    title: itemTitle.textContent,
-    price: itemPrice.textContent,
+    // imageUrl: document.querySelector('.item__img img').getAttribute('src'),
+    // title: itemTitle.textContent,
+    // price: itemPrice.textContent,
     color: itemColors.value,
     quantity: parseInt(itemQuant.value)
   };
 
   const cart = JSON.parse(localStorage.getItem('cart')) || [];
-  const index = cart.findIndex((item) => {return item.color === product.color});
+  const index = cart.findIndex((item) => {return item.id === product.id && item.color === product.color});
   if (index !== -1) {
     cart[index].quantity += product.quantity;
   } else {
