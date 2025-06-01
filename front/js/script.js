@@ -1,4 +1,4 @@
-// TODO Get all products from the backend API
+// Get all products from the backend API
 fetch("http://localhost:3000/api/products")
   .then((response) => {
     return response.json();
@@ -10,19 +10,19 @@ fetch("http://localhost:3000/api/products")
     insertProducts(products);
   });
 
-// TODO Get the existing element on the page where I can insert cards.
-let items = document.getElementById("items");
+// Get the existing element on the page where to insert cards
+const items = document.getElementById("items");
 
-// TODO use dynamic info in the string for innerHtml via ${}
+// Use dynamic info in the string for innerHtml via ${}
 /**
  * Insert products into the homepage
  *
  * @param {[object]} products - an array of objects that have product info
  */
 function insertProducts(products) {
-  // TODO Iterate over the products that came from the backend API
+  // Iterate over the products that came from the backend API
   for (let product of products) {
-    // TODO insert product info into webpage using js dom manipulation (innerHtml/createElement)
+    // Insert product info into webpage using JS DOM manipulation (innerHtml/createElement)
     console.log(product);
     items.innerHTML += `
         <a href="./product.html?id=${product._id}">
