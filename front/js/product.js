@@ -42,9 +42,9 @@ function insertProduct(product) {
 addToCart.addEventListener("click", () => {
   const product = {
     id: productId,
-    imageUrl: document.querySelector(".item__img img").getAttribute("src"),
-    title: itemTitle.textContent,
-    price: itemPrice.textContent,
+    // imageUrl: document.querySelector(".item__img img").getAttribute("src"),
+    // title: itemTitle.textContent,
+    // price: itemPrice.textContent,
     color: itemColors.value,
     quantity: parseInt(itemQuant.value) // option value is a string, parseInt() converts a string to an int 
   };
