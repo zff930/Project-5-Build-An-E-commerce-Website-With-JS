@@ -16,10 +16,9 @@ const itemColors = document.getElementById("colors");
 const itemQuant = document.getElementById("quantity");
 const addToCart = document.getElementById("addToCart");
 
-// Use dynamic info in the string for innerHTML via ${}
 /**
- * Insert the clicked product into its corresponding product page
- *
+ * Insert the clicked product into its corresponding product page.
+ * Use dynamic info in the string for innerHTML via ${}.
  * @param {object} product - an object that has product info
  */
 function insertProduct(product) {
