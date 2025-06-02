@@ -1,14 +1,7 @@
 // Get all products from the backend API
 fetch("http://localhost:3000/api/products")
-  .then((response) => {
-    return response.json();
-  })
-  .then((data) => {
-    return data;
-  })
-  .then((products) => {
-    insertProducts(products);
-  });
+  .then((data) => data.json())
+  .then((products) => insertProducts(products));
 
 // Get the existing element on the page where to insert cards
 const items = document.getElementById("items");

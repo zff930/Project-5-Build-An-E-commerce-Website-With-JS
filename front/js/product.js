@@ -4,12 +4,8 @@ const productId = params.get("id"); // Extract the value of 'id'
 
 //Insert the product and its details into the product page.
 fetch(`http://localhost:3000/api/products/${productId}`)
-  .then((data) => {
-    return data.json();
-  })
-  .then((product) => {
-    insertProduct(product);
-  });
+  .then(data => data.json())
+  .then(product => insertProduct(product));
 
 // Get the existing elements on the page where to insert its product info
 const itemImage = document.querySelector(".item__img");
@@ -46,7 +42,7 @@ addToCart.addEventListener("click", () => {
     // title: itemTitle.textContent,
     // price: itemPrice.textContent,
     color: itemColors.value,
-    quantity: parseInt(itemQuant.value) // option value is a string, parseInt() converts a string to an int 
+    quantity: parseInt(itemQuant.value), // option value is a string, parseInt() converts a string to an int
   };
 
   const cart = JSON.parse(localStorage.getItem("cart")) || []; // cart can be empty
@@ -58,7 +54,8 @@ addToCart.addEventListener("click", () => {
   // If it exists, update the product quantity
   if (index !== -1) {
     cart[index].quantity += product.quantity;
-  } else { // if not, push the product to the cart
+  } else {
+    // if not, push the product to the cart
     cart.push(product);
   }
 

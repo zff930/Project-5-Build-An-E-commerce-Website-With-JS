@@ -1,25 +1,18 @@
-// fetch('http://localhost:3000/api/products/order', {
-//   method: 'POST',
-//   headers: {'Content-Type': 'application/json'},
-//   body: JSON.stringify({firstName, lastName})
-// })
-//   .then((response) => {
-//     return response.json();
-//   })
-//   .then((data) => {
-//     console.log(data);
-//   });
+const params = new URLSearchParams(window.location.search); // Get the full query string from the URL
+const productId = params.get("id");
+
+fetch(`http://localhost:3000/api/products/${productId}`)
+  .then(data => data.json)
+  .then(product => insertCartItems())
+  .then(product => insertTotalPrice());
 
 // Get the existing element on the page where to insert cart items
-const cartItems = document.getElementById('cart__items');
-const totalPrice = document.getElementById('totalPrice');
-const itemQuant = document.getElementsByClassName('itemQuantity');
+const cartItems = document.getElementById("cart__items");
+const totalPrice = document.getElementById("totalPrice");
+const itemQuant = document.getElementsByClassName("itemQuantity");
 
-const cart = JSON.parse(localStorage.getItem("cart"));
+const cart = JSON.parse(localStorage.getItem("cart") || []);
 console.log(cart);
-insertCartItems();
-insertTotalPrice();
-console.log(itemQuant);
 
 // Use dynamic info in the string for innerHTML via ${}
 /**
@@ -54,24 +47,24 @@ function insertCartItems() {
 }
 
 /** Calculate total price of all products in the cart
- * 
- * @returns a number that indicates price sum 
+ *
+ * @returns a number that indicates price sum
  */
 function calcTotalPrice() {
-    let sumPrice = 0;
-    cart.forEach((cartItem) => {
-        sumPrice += cartItem.price * cartItem.quantity;
-    });
-    return sumPrice;
+  let sumPrice = 0;
+  cart.forEach((cartItem) => {
+    sumPrice += cartItem.price * cartItem.quantity;
+  });
+  return sumPrice;
 }
 
 /**
  * Insert total price into cart page for innerHTML via calcTotalPrice()
  */
 function insertTotalPrice() {
-    totalPrice.innerHTML = calcTotalPrice();
+  totalPrice.innerHTML = calcTotalPrice();
 }
 
-itemQuant.addEventListener('change', ($event) => {
-    
-});
+// itemQuant.addEventListener('change', ($event) => {
+
+// });
