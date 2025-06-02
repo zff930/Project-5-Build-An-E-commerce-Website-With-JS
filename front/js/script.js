@@ -1,10 +1,10 @@
 // Get all products from the backend API
-fetch("http://localhost:3000/api/products")
-  .then((data) => data.json())
-  .then((products) => insertProducts(products));
+fetch('http://localhost:3000/api/products')
+  .then(data => data.json())
+  .then(products => insertProducts(products));
 
 // Get the existing element on the page where to insert cards
-const items = document.getElementById("items");
+const items = document.getElementById('items');
 
 // Use dynamic info in the string for innerHTML via ${}
 /**

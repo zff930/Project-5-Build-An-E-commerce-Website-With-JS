@@ -8,17 +8,16 @@ fetch(`http://localhost:3000/api/products/${productId}`)
   .then(product => insertProduct(product));
 
 // Get the existing elements on the page where to insert its product info
-const itemImage = document.querySelector(".item__img");
-const itemTitle = document.getElementById("title");
-const itemPrice = document.getElementById("price");
-const itemDescription = document.getElementById("description");
-const itemColors = document.getElementById("colors");
-const itemQuant = document.getElementById("quantity");
-const addToCart = document.getElementById("addToCart");
+const itemImage = document.querySelector('.item__img');
+const itemTitle = document.getElementById('title');
+const itemPrice = document.getElementById('price');
+const itemDescription = document.getElementById('description');
+const itemColors = document.getElementById('colors');
+const itemQuant = document.getElementById('quantity');
+const addToCart = document.getElementById('addToCart');
 
 /**
- * Insert the clicked product into its corresponding product page.
- * Use dynamic info in the string for innerHTML via ${}.
+ * Insert the clicked product into its corresponding product page. Use dynamic info in the string for innerHTML via ${}.
  * @param {object} product - an object that has product info
  */
 function insertProduct(product) {
@@ -34,17 +33,17 @@ function insertProduct(product) {
 
 // Add an EventListener for the "Added to Cart" button
 // so that products will be added to the cart in localStorage
-addToCart.addEventListener("click", () => {
+addToCart.addEventListener('click', () => {
   const product = {
     id: productId,
-    // imageUrl: document.querySelector(".item__img img").getAttribute("src"),
+    // imageUrl: document.querySelector('.item__img img').getAttribute('src'),
     // title: itemTitle.textContent,
     // price: itemPrice.textContent,
     color: itemColors.value,
     quantity: parseInt(itemQuant.value), // option value is a string, parseInt() converts a string to an int
   };
 
-  const cart = JSON.parse(localStorage.getItem("cart")) || []; // cart can be empty
+  const cart = JSON.parse(localStorage.getItem('cart')) || []; // cart can be empty
 
   // Find the index of the existing product by its id and color
   const index = cart.findIndex((item) => {
@@ -58,7 +57,7 @@ addToCart.addEventListener("click", () => {
     cart.push(product);
   }
 
-  localStorage.setItem("cart", JSON.stringify(cart));
+  localStorage.setItem('cart', JSON.stringify(cart));
 
-  alert("Product added to cart!");
+  alert('Product added to cart!');
 });

@@ -1,24 +1,23 @@
 const params = new URLSearchParams(window.location.search); // Get the full query string from the URL
-const productId = params.get("id");
+const productId = params.get('id');
 
 fetch(`http://localhost:3000/api/products/${productId}`)
   .then(data => data.json)
-  .then(product => insertCartItems())
-  .then(product => insertTotalPrice());
+  .then(product => insertCartItems(product))
+  .then(insertTotalPrice());
 
 // Get the existing element on the page where to insert cart items
-const cartItems = document.getElementById("cart__items");
-const totalPrice = document.getElementById("totalPrice");
-const itemQuant = document.getElementsByClassName("itemQuantity");
+const cartItems = document.getElementById('cart__items');
+const totalPrice = document.getElementById('totalPrice');
+const itemQuant = document.getElementsByClassName('itemQuantity');
 
-const cart = JSON.parse(localStorage.getItem("cart") || []);
+const cart = JSON.parse(localStorage.getItem('cart') || []);
 console.log(cart);
 
-// Use dynamic info in the string for innerHTML via ${}
 /**
- * Insert cart items into cart page
+ * Insert cart items into cart page. Use dynamic info in the string for innerHTML via ${}
  */
-function insertCartItems() {
+function insertCartItems(product) {
   cart.forEach((cartItem) => {
     // Insert cart item info into webpage using JS DOM manipulation
     cartItems.innerHTML += `
@@ -46,11 +45,12 @@ function insertCartItems() {
   });
 }
 
-/** Calculate total price of all products in the cart
- *
+/**
+ * Calculate total price of all products in the cart.
+ * @param {*} product 
  * @returns a number that indicates price sum
  */
-function calcTotalPrice() {
+function calcTotalPrice(product) {
   let sumPrice = 0;
   cart.forEach((cartItem) => {
     sumPrice += cartItem.price * cartItem.quantity;
@@ -59,7 +59,7 @@ function calcTotalPrice() {
 }
 
 /**
- * Insert total price into cart page for innerHTML via calcTotalPrice()
+ * Insert total price into cart page for innerHTML via calcTotalPrice().
  */
 function insertTotalPrice() {
   totalPrice.innerHTML = calcTotalPrice();
