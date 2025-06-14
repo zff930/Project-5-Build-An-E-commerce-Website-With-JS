@@ -1,35 +1,36 @@
-const params = new URLSearchParams(window.location.search); // Get the full query string from the URL
-const productId = params.get('id');
-
-fetch(`http://localhost:3000/api/products/${productId}`)
-  .then(data => data.json)
-  .then(product => insertCartItems(product))
-  .then(insertTotalPrice());
+const cart = JSON.parse(localStorage.getItem("cart") || []);
+const productCache = [];
 
 // Get the existing element on the page where to insert cart items
 const cartItems = document.getElementById('cart__items');
+const totalQuant = document.getElementById('totalQuantity');
 const totalPrice = document.getElementById('totalPrice');
 const itemQuant = document.getElementsByClassName('itemQuantity');
 
-const cart = JSON.parse(localStorage.getItem('cart') || []);
-console.log(cart);
+insertCartItems();
+insertTotalQuant();
+insertTotalPrice();
 
 /**
  * Insert cart items into cart page. Use dynamic info in the string for innerHTML via ${}
  */
-function insertCartItems(product) {
+function insertCartItems() {
   cart.forEach((cartItem) => {
-    // Insert cart item info into webpage using JS DOM manipulation
-    cartItems.innerHTML += `
+    //TODO check cache to see if product id already exists; if not, fetch.
+    fetch(`http://localhost:3000/api/products/${cartItem.id}`)
+      .then((data) => data.json())
+      .then((product) => {
+        // Insert cart item info into webpage using JS DOM manipulation
+        cartItems.innerHTML += `
           <article class="cart__item" data-id="{product-ID}" data-color="{product-color}">
               <div class="cart__item__img">
-                  <img src="${cartItem.imageUrl}" alt="Photo of a sofa">
+                  <img src="${product.imageUrl}" alt="${product.altTxt}">
               </div>
               <div class="cart__item__content">
                   <div class="cart__item__content__description">
-                      <h2>${cartItem.title}</h2>
+                      <h2>${product.name}</h2>
                       <p>${cartItem.color}</p>
-                      <p>${cartItem.price}</p>
+                      <p>${product.price}</p>
                   </div>                  
                   <div class="cart__item__content__settings">
                       <div class="cart__item__content__settings__quantity">
@@ -42,27 +43,58 @@ function insertCartItems(product) {
                   </div>
               </div>
           </article>`;
+      });
   });
 }
 
 /**
+ * Calculate total quantity of all products in the cart.
+ * @returns a number that indicates quantity sum
+ */
+function calcTotalQuant() {
+    let sumQuant = 0;
+    cart.forEach((cartItem) => {
+        sumQuant += cartItem.quantity;
+    });
+
+    return sumQuant;
+}
+
+/**
+ * Insert total quantity into cart page for innerHTML via calcTotalQuant().
+ */
+function insertTotalQuant() {
+    let total = calcTotalQuant();
+    totalQuant.innerHTML = total;
+}
+
+/**
  * Calculate total price of all products in the cart.
- * @param {*} product 
  * @returns a number that indicates price sum
  */
-function calcTotalPrice(product) {
+async function calcTotalPrice() {
   let sumPrice = 0;
-  cart.forEach((cartItem) => {
-    sumPrice += cartItem.price * cartItem.quantity;
+  const productPromises = cart.map((cartItem) =>
+    fetch(`http://localhost:3000/api/products/${cartItem.id}`)
+      .then((data) => data.json())
+      .then((product) => product.price * cartItem.quantity)
+  );
+
+  // Use Promise.all to wait for all fetch requests to complete.
+  const prices = await Promise.all(productPromises);
+  prices.forEach((price) => {
+    sumPrice += price;
   });
+
   return sumPrice;
 }
 
 /**
  * Insert total price into cart page for innerHTML via calcTotalPrice().
  */
-function insertTotalPrice() {
-  totalPrice.innerHTML = calcTotalPrice();
+async function insertTotalPrice() {
+  const total = await calcTotalPrice();
+  totalPrice.innerHTML = total;
 }
 
 // itemQuant.addEventListener('change', ($event) => {
