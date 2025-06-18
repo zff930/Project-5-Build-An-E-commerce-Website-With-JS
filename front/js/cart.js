@@ -2,27 +2,40 @@ const cart = JSON.parse(localStorage.getItem("cart") || []);
 const productCache = [];
 
 // Get the existing element on the page where to insert cart items
-const cartItems = document.getElementById('cart__items');
-const totalQuant = document.getElementById('totalQuantity');
-const totalPrice = document.getElementById('totalPrice');
-const itemQuant = document.getElementsByClassName('itemQuantity');
+const cartItems = document.getElementById("cart__items");
+const totalQuant = document.getElementById("totalQuantity");
+const totalPrice = document.getElementById("totalPrice");
 
-insertCartItems();
-insertTotalQuant();
-insertTotalPrice();
+init();
+
+async function init() {
+  await insertCartItems();
+  changeQuant();
+  deleteItem();
+  insertTotalQuant();
+  insertTotalPrice();
+}
 
 /**
  * Insert cart items into cart page. Use dynamic info in the string for innerHTML via ${}
  */
-function insertCartItems() {
-  cart.forEach((cartItem) => {
-    //TODO check cache to see if product id already exists; if not, fetch.
-    fetch(`http://localhost:3000/api/products/${cartItem.id}`)
-      .then((data) => data.json())
-      .then((product) => {
-        // Insert cart item info into webpage using JS DOM manipulation
-        cartItems.innerHTML += `
-          <article class="cart__item" data-id="{product-ID}" data-color="{product-color}">
+async function insertCartItems() {
+  cartItems.innerHTML = "";
+
+  const fetchPromises = cart.map(async (cartItem) => {
+    //Check cache to see if product id already exists; if not, fetch.
+    let product = productCache.find((p) => p._id === cartItem.id);
+    if (!product) {
+      const data = await fetch(
+        `http://localhost:3000/api/products/${cartItem.id}`
+      );
+      product = await data.json();
+      productCache.push(product);
+    }
+
+    // Insert cart item info into webpage using JS DOM manipulation
+    cartItems.innerHTML += `
+          <article class="cart__item" data-id="${cartItem.id}" data-color="${cartItem.color}">
               <div class="cart__item__img">
                   <img src="${product.imageUrl}" alt="${product.altTxt}">
               </div>
@@ -43,7 +56,46 @@ function insertCartItems() {
                   </div>
               </div>
           </article>`;
-      });
+  });
+
+  await Promise.all(fetchPromises);
+}
+
+function changeQuant() {
+  const itemQuant = document.querySelectorAll(".itemQuantity");
+
+  itemQuant.forEach((input, index) => {
+    input.addEventListener("change", ($event) => {
+      const quantity = parseInt($event.target.value);
+      if (quantity !== cart[index].quantity) {
+        cart[index].quantity = quantity;
+        localStorage.setItem("cart", JSON.stringify(cart));
+        insertTotalQuant();
+        insertTotalPrice();
+      }
+    });
+  });
+}
+
+function deleteItem() {
+  const deleteBtn = document.querySelectorAll(".deleteItem");
+
+  deleteBtn.forEach((select) => {
+    select.addEventListener("click", ($event) => {
+      const item = $event.target.closest("article");
+      const id = item.dataset.id;
+      const color = item.dataset.color;
+
+      // Update DOM & local storage
+      const index = cart.findIndex((p) => p.id === id && p.color === color);
+      if (index != -1) {
+        cart.splice(index, 1);
+        item.remove();
+        localStorage.setItem("cart", JSON.stringify(cart));
+        insertTotalQuant();
+        insertTotalPrice();
+      }
+    });
   });
 }
 
@@ -52,20 +104,20 @@ function insertCartItems() {
  * @returns a number that indicates quantity sum
  */
 function calcTotalQuant() {
-    let sumQuant = 0;
-    cart.forEach((cartItem) => {
-        sumQuant += cartItem.quantity;
-    });
+  let sumQuant = 0;
+  cart.forEach((cartItem) => {
+    sumQuant += cartItem.quantity;
+  });
 
-    return sumQuant;
+  return sumQuant;
 }
 
 /**
  * Insert total quantity into cart page for innerHTML via calcTotalQuant().
  */
 function insertTotalQuant() {
-    let total = calcTotalQuant();
-    totalQuant.innerHTML = total;
+  let total = calcTotalQuant();
+  totalQuant.innerHTML = total;
 }
 
 /**
@@ -96,7 +148,3 @@ async function insertTotalPrice() {
   const total = await calcTotalPrice();
   totalPrice.innerHTML = total;
 }
-
-// itemQuant.addEventListener('change', ($event) => {
-
-// });
