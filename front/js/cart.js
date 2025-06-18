@@ -5,6 +5,11 @@ const productCache = [];
 const cartItems = document.getElementById("cart__items");
 const totalQuant = document.getElementById("totalQuantity");
 const totalPrice = document.getElementById("totalPrice");
+const form = document.querySelector(".cart__order__form");
+const firstNameInput = document.getElementById("firstName");
+const firstNameErrMsg = document.getElementById("firstNameErrorMsg");
+const lastNameInput = document.getElementById("lastName");
+const lastNameErrMsg = document.getElementById("lastNameErrorMsg");
 
 init();
 
@@ -147,4 +152,25 @@ async function calcTotalPrice() {
 async function insertTotalPrice() {
   const total = await calcTotalPrice();
   totalPrice.innerHTML = total;
+}
+
+form.addEventListener("change", () => {
+  const firstName = firstNameInput.value;
+  const lastName = lastNameInput.value;
+  nameCheck(firstName, firstNameErrMsg);
+  nameCheck(lastName, lastNameErrMsg);
+});
+
+/**
+ * Tests if the first/last name that users enter validates.
+ * @param {*} input The name that users enter
+ * @param {*} errMsg The message that shows validation check result
+ */
+function nameCheck(input, errMsg) {
+  const nameRegex = /^(?=.*[a-zA-Z])[a-zA-Z\s'-]+$/;
+  if (!nameRegex.test(input)) {
+    errMsg.textContent = "Invalid";
+  } else {
+    errMsg.textContent = "";
+  }
 }
