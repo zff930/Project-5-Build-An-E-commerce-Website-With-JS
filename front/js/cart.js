@@ -10,6 +10,10 @@ const firstNameInput = document.getElementById("firstName");
 const firstNameErrMsg = document.getElementById("firstNameErrorMsg");
 const lastNameInput = document.getElementById("lastName");
 const lastNameErrMsg = document.getElementById("lastNameErrorMsg");
+const addressInput = document.getElementById("address");
+const addressErrMsg = document.getElementById("addressErrorMsg");
+const cityInput = document.getElementById("city");
+const cityErrMsg = document.getElementById("cityErrorMsg");
 
 init();
 
@@ -157,8 +161,13 @@ async function insertTotalPrice() {
 form.addEventListener("change", () => {
   const firstName = firstNameInput.value;
   const lastName = lastNameInput.value;
+  const address = addressInput.value;
+  const city = cityInput.value;
+
   nameCheck(firstName, firstNameErrMsg);
   nameCheck(lastName, lastNameErrMsg);
+  addressCheck(address, addressErrMsg);
+  cityCheck(city, cityErrMsg);
 });
 
 /**
@@ -168,9 +177,41 @@ form.addEventListener("change", () => {
  */
 function nameCheck(input, errMsg) {
   const nameRegex = /^(?=.*[a-zA-Z])[a-zA-Z\s'-]+$/;
+
   if (!nameRegex.test(input)) {
     errMsg.textContent = "Invalid";
   } else {
     errMsg.textContent = "";
   }
 }
+
+/**
+ * Tests if the address users enter validates.
+ * @param {*} input The address that users enter
+ * @param {*} errMsg The message that shows validation check result
+ */
+function addressCheck(input, errMsg) {
+  const addressRegex =
+    /^\d+\s+([NnEeSsWw]\s)?[A-Za-z0-9\s]+(?:\s(?:Street|St|Avenue|Ave|Boulevard|Blvd|Road|Rd|Lane|Ln|Drive|Dr|Court|Ct|Circle|Cir|Way|Terrace|Ter|Place|Pl|Trail|Trl|Parkway|Pkwy|Commons))\.?(?:\s+(?:Apt|Suite|Unit|#)\s*\w+)?$/;
+
+  if (!addressRegex.test(input)) {
+    errMsg.textContent = "Invalid";
+  } else {
+    errMsg.textContent = "";
+  }
+}
+
+/**
+ * Tests if the city users enter validates.
+ * @param {*} input The city users enter
+ * @param {*} errMsg The message that shows validation check result
+ */
+function cityCheck(input, errMsg) {
+    const cityRegex = /^[A-Za-z]+(?:[ '\-][A-Za-z]+)*$/;
+    
+    if (!cityRegex.test(input)) {
+      errMsg.textContent = "Invalid";
+    } else {
+      errMsg.textContent = "";
+    }
+  }
