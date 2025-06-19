@@ -14,6 +14,8 @@ const addressInput = document.getElementById("address");
 const addressErrMsg = document.getElementById("addressErrorMsg");
 const cityInput = document.getElementById("city");
 const cityErrMsg = document.getElementById("cityErrorMsg");
+const emailInput = document.getElementById("email");
+const emailErrMsg = document.getElementById("emailErrorMsg");
 
 init();
 
@@ -163,11 +165,13 @@ form.addEventListener("change", () => {
   const lastName = lastNameInput.value;
   const address = addressInput.value;
   const city = cityInput.value;
+  const email = emailInput.value;
 
   nameCheck(firstName, firstNameErrMsg);
   nameCheck(lastName, lastNameErrMsg);
   addressCheck(address, addressErrMsg);
   cityCheck(city, cityErrMsg);
+  emailCheck(email, emailErrMsg);
 });
 
 /**
@@ -207,11 +211,26 @@ function addressCheck(input, errMsg) {
  * @param {*} errMsg The message that shows validation check result
  */
 function cityCheck(input, errMsg) {
-    const cityRegex = /^[A-Za-z]+(?:[ '\-][A-Za-z]+)*$/;
-    
-    if (!cityRegex.test(input)) {
-      errMsg.textContent = "Invalid";
-    } else {
-      errMsg.textContent = "";
-    }
+  const cityRegex = /^[A-Za-z]+(?:[ '\-][A-Za-z]+)*$/;
+
+  if (!cityRegex.test(input.trim())) {
+    errMsg.textContent = "Invalid";
+  } else {
+    errMsg.textContent = "";
   }
+}
+
+/**
+ * Tests if the email users enter validates.
+ * @param {*} input The email users enter
+ * @param {*} errMsg The message that shows validation check result
+ */
+function emailCheck(input, errMsg) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (!emailRegex.test(input)) {
+    errMsg.textContent = "Invalid";
+  } else {
+    errMsg.textContent = "";
+  }
+}
