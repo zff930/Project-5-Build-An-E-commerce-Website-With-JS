@@ -6,15 +6,20 @@ const cartItems = document.getElementById("cart__items");
 const totalQuant = document.getElementById("totalQuantity");
 const totalPrice = document.getElementById("totalPrice");
 const form = document.querySelector(".cart__order__form");
+const submitBtn = document.getElementById("order");
+
+// Inputs
 const firstNameInput = document.getElementById("firstName");
-const firstNameErrMsg = document.getElementById("firstNameErrorMsg");
 const lastNameInput = document.getElementById("lastName");
-const lastNameErrMsg = document.getElementById("lastNameErrorMsg");
 const addressInput = document.getElementById("address");
-const addressErrMsg = document.getElementById("addressErrorMsg");
 const cityInput = document.getElementById("city");
-const cityErrMsg = document.getElementById("cityErrorMsg");
 const emailInput = document.getElementById("email");
+
+// Err Msgs
+const firstNameErrMsg = document.getElementById("firstNameErrorMsg");
+const lastNameErrMsg = document.getElementById("lastNameErrorMsg");
+const addressErrMsg = document.getElementById("addressErrorMsg");
+const cityErrMsg = document.getElementById("cityErrorMsg");
 const emailErrMsg = document.getElementById("emailErrorMsg");
 
 init();
@@ -160,18 +165,37 @@ async function insertTotalPrice() {
   totalPrice.innerHTML = total;
 }
 
-form.addEventListener("change", () => {
-  const firstName = firstNameInput.value;
-  const lastName = lastNameInput.value;
-  const address = addressInput.value;
-  const city = cityInput.value;
-  const email = emailInput.value;
+form.addEventListener("submit", async ($event) => {
+  $event.preventDefault();
 
-  nameCheck(firstName, firstNameErrMsg);
-  nameCheck(lastName, lastNameErrMsg);
-  addressCheck(address, addressErrMsg);
-  cityCheck(city, cityErrMsg);
-  emailCheck(email, emailErrMsg);
+  const firstName = firstNameInput.value.trim();
+  const lastName = lastNameInput.value.trim();
+  const address = addressInput.value.trim();
+  const city = cityInput.value.trim();
+  const email = emailInput.value.trim();
+  
+  const firstNameValid = nameCheck(firstName, firstNameErrMsg);
+  const lastNameValid = nameCheck(lastName, lastNameErrMsg);
+  const addressValid = addressCheck(address, addressErrMsg);
+  const cityValid = cityCheck(city, cityErrMsg);
+  const emailValid = emailCheck(email, emailErrMsg);
+
+  if (firstNameValid && lastNameValid && addressValid && cityValid && emailValid) {
+    const contact = {firstName, lastName, address, city, email};
+    const products = cart.map((p) => p.id);
+
+    const res = await fetch("http://localhost:3000/api/products/order", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({contact, products}),
+    });
+
+    const data = await res.json();
+    console.log("Order response:", data);
+    window.location.href = `confirmation.html?orderId=${data.orderId}`;
+  } else {
+    console.warn("Validation failed. Fix form errors first.");
+  }
 });
 
 /**
@@ -184,8 +208,10 @@ function nameCheck(input, errMsg) {
 
   if (!nameRegex.test(input)) {
     errMsg.textContent = "Invalid";
+    return false;
   } else {
     errMsg.textContent = "";
+    return true;
   }
 }
 
@@ -200,8 +226,10 @@ function addressCheck(input, errMsg) {
 
   if (!addressRegex.test(input)) {
     errMsg.textContent = "Invalid";
+    return false;
   } else {
     errMsg.textContent = "";
+    return true;
   }
 }
 
@@ -213,10 +241,12 @@ function addressCheck(input, errMsg) {
 function cityCheck(input, errMsg) {
   const cityRegex = /^[A-Za-z]+(?:[ '\-][A-Za-z]+)*$/;
 
-  if (!cityRegex.test(input.trim())) {
+  if (!cityRegex.test(input)) {
     errMsg.textContent = "Invalid";
+    return false;
   } else {
     errMsg.textContent = "";
+    return true;
   }
 }
 
@@ -230,7 +260,9 @@ function emailCheck(input, errMsg) {
 
   if (!emailRegex.test(input)) {
     errMsg.textContent = "Invalid";
+    return false;
   } else {
     errMsg.textContent = "";
+    return true;
   }
 }
