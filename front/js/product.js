@@ -43,10 +43,10 @@ addToCart.addEventListener("click", () => {
     quantity: parseInt(itemQuant.value), // option value is a string, parseInt() converts a string to an int
   };
 
-  const cart = JSON.parse(localStorage.getItem("cart")) || []; // cart can be empty
+  const cart = JSON.parse(localStorage.getItem("cart")) || "[]"; // cart can be empty
 
-  if ((product.quantity == 0)) {
-    return;
+  if (product.quantity == 0) {
+    alert("Please add an item!");
   } else {
     // Find the index of the existing product by its id and color
     const index = cart.findIndex((item) => {

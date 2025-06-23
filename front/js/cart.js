@@ -1,4 +1,4 @@
-const cart = JSON.parse(localStorage.getItem("cart") || []);
+const cart = JSON.parse(localStorage.getItem("cart") || "[]");
 const productCache = [];
 
 // Get the existing element on the page where to insert cart items
@@ -173,25 +173,31 @@ form.addEventListener("submit", async ($event) => {
   const address = addressInput.value.trim();
   const city = cityInput.value.trim();
   const email = emailInput.value.trim();
-  
+
   const firstNameValid = nameCheck(firstName, firstNameErrMsg);
   const lastNameValid = nameCheck(lastName, lastNameErrMsg);
   const addressValid = addressCheck(address, addressErrMsg);
   const cityValid = cityCheck(city, cityErrMsg);
   const emailValid = emailCheck(email, emailErrMsg);
 
-  if (firstNameValid && lastNameValid && addressValid && cityValid && emailValid) {
-    const contact = {firstName, lastName, address, city, email};
+  if (
+    firstNameValid &&
+    lastNameValid &&
+    addressValid &&
+    cityValid &&
+    emailValid
+  ) {
+    const contact = { firstName, lastName, address, city, email };
     const products = cart.map((p) => p.id);
 
     const res = await fetch("http://localhost:3000/api/products/order", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({contact, products}),
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ contact, products }),
     });
 
     const data = await res.json();
-    console.log("Order response:", data);
+    localStorage.clear();
     window.location.href = `confirmation.html?orderId=${data.orderId}`;
   } else {
     console.warn("Validation failed. Fix form errors first.");
