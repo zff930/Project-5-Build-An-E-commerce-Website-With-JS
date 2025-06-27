@@ -6,9 +6,8 @@ fetch('http://localhost:3000/api/products')
 // Get the existing element on the page where to insert cards
 const items = document.getElementById('items');
 
-// Use dynamic info in the string for innerHTML via ${}
 /**
- * Insert products into the homepage
+ * Insert products into the homepage. Use dynamic info in the string for innerHTML via ${}.
  *
  * @param {[object]} products - an array of objects that have product info
  */
