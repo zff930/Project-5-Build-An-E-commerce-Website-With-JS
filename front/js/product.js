@@ -45,7 +45,9 @@ addToCart.addEventListener("click", () => {
 
   const cart = JSON.parse(localStorage.getItem("cart") || "[]"); // cart can be empty
 
-  if (product.quantity == 0) {
+  if (!product.color) {
+    alert("Please pick a color!");
+  } else if (!product.quantity) {
     alert("Please add an item!");
   } else {
     // Find the index of the existing product by its id and color
